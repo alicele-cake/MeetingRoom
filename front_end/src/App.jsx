@@ -7,6 +7,7 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
   const [value, setValue] = useState(null)
+  const [valueInput, setValueInput] = useState('')
 
   useEffect(() => {
     fetch('/api/account/value')
@@ -14,6 +15,19 @@ function App() {
       .then(data => setValue(data.value))
       .catch(err => console.error(err))
   }, [])
+
+  const postValue = (v) => {
+    const num = Number(v)
+    if (Number.isNaN(num)) return
+    fetch('/api/account/value', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value: num })
+    })
+      .then(res => res.json())
+      .then(data => setValue(data.value))
+      .catch(err => console.error(err))
+  }
 
   return (
     <>
@@ -38,6 +52,16 @@ function App() {
         </button>
         <div>
           <p>後端數值：{value !== null ? value : '載入中...'}</p>
+          <div style={{ marginTop: '8px' }}>
+            <input
+              type="number"
+              value={valueInput}
+              onChange={(e) => setValueInput(e.target.value)}
+              placeholder="輸入數值"
+              style={{ width: '120px', marginRight: '8px' }}
+            />
+            <button type="button" onClick={() => postValue(valueInput)}>送出給後端</button>
+          </div>
         </div>
       </section>
 
