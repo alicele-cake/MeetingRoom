@@ -1,29 +1,30 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [value, setValue] = useState(null)
-  const [valueInput, setValueInput] = useState('')
-
-  useEffect(() => {
-    fetch('/api/account/value')
-      .then(res => res.json())
-      .then(data => setValue(data.value))
-      .catch(err => console.error(err))
-  }, [])
+  const [count, setCount] = useState(0);
+  const [value, setValue] = useState(null);
+  const [valueInput, setValueInput] = useState("");
 
   const sendNum = (v) => {
-    const num = Number(v)
-    if (Number.isNaN(num)) return
+    const num = Number(v);
+    if (Number.isNaN(num)) return;
     fetch(`/api/account/value?num=${encodeURIComponent(num)}`)
-      .then(res => res.json())
-      .then(data => setValue(data.value))
-      .catch(err => console.error(err))
-  }
+      .then((res) => res.json())
+      .then((data) => setValue(data.value))
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    // fetch("/api/account/value")
+    //   .then((res) => res.json())
+    //   .then((data) => setValue(data.value))
+    //   .catch((err) => console.error(err));
+    sendNum(12);
+  }, []);
 
   return (
     <>
@@ -47,7 +48,7 @@ function App() {
           Count is {count}
         </button>
         <div>
-          <p>後端數值：{value !== null ? value : '載入中...'}</p>
+          {/* <p>後端數值：{value !== null ? value : '載入中...'}</p>
           <div style={{ marginTop: '8px' }}>
             <input
               type="number"
@@ -57,7 +58,7 @@ function App() {
               style={{ width: '120px', marginRight: '8px' }}
             />
             <button type="button" onClick={() => sendNum(valueInput)}>送出給後端</button>
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -147,7 +148,7 @@ function App() {
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

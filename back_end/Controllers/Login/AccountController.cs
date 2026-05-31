@@ -17,9 +17,10 @@ namespace back_end.Controllers.Login
         }
 
         [HttpGet("value")]
-        public IActionResult GetValue()
+        public IActionResult GetValue(int num)
         {
-            return Ok(new { value = 0 });
+            int sum_num = num + 10;
+            return Ok(new { value = sum_num });
         }
     }
 }
