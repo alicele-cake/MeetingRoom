@@ -11,7 +11,7 @@ namespace back_end.Controllers.Login
     {
         private readonly string _dataFilePath;
 
-n        public AccountController(IWebHostEnvironment env)
+        public AccountController(IWebHostEnvironment env)
         {
             _dataFilePath = Path.Combine(env.ContentRootPath, "RuntimeData", "value.json");
             var dir = Path.GetDirectoryName(_dataFilePath);
@@ -48,7 +48,7 @@ n        public AccountController(IWebHostEnvironment env)
 
         public class ValueDto { public int value { get; set; } }
 
-n        [HttpPost("value")]
+        [HttpPost("value")]
         public IActionResult SetValue([FromBody] ValueDto dto)
         {
             if (dto == null) return BadRequest();
