@@ -2,6 +2,9 @@
 # 這個 .gitignore 檔案由 Microsoft(R) Visual Studio 自動建立。
 ################################################################################
 
+/back_end/.vs/back_end/FileContentIndex
+/back_end/.vs/back_end/v17/
+/back_end/bin/Debug/net8.0/
 /back_end/.vs/back_end/CopilotIndices/
 *.vsidx
 *.v2
@@ -12,3 +15,6 @@
 /back_end/.vs/back_end/CopilotIndices/17.14.1231.31060/SemanticSymbols.db-wal
 /back_end/.vs/back_end/v17/.suo
 /back_end/.vs/back_end/v17/DocumentLayout.json
+*.json
+/back_end/obj/Debug/
+/back_end/obj/Debug/net8.0/rpswa.dswa.cache.json
