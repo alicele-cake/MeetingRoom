@@ -16,14 +16,10 @@ function App() {
       .catch(err => console.error(err))
   }, [])
 
-  const postValue = (v) => {
+  const sendNum = (v) => {
     const num = Number(v)
     if (Number.isNaN(num)) return
-    fetch('/api/account/value', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ value: num })
-    })
+    fetch(`/api/account/value?num=${encodeURIComponent(num)}`)
       .then(res => res.json())
       .then(data => setValue(data.value))
       .catch(err => console.error(err))
@@ -60,7 +56,7 @@ function App() {
               placeholder="輸入數值"
               style={{ width: '120px', marginRight: '8px' }}
             />
-            <button type="button" onClick={() => postValue(valueInput)}>送出給後端</button>
+            <button type="button" onClick={() => sendNum(valueInput)}>送出給後端</button>
           </div>
         </div>
       </section>
