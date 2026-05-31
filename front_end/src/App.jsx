@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -6,6 +6,14 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [value, setValue] = useState(null)
+
+  useEffect(() => {
+    fetch('/api/account/value')
+      .then(res => res.json())
+      .then(data => setValue(data.value))
+      .catch(err => console.error(err))
+  }, [])
 
   return (
     <>
@@ -28,6 +36,9 @@ function App() {
         >
           Count is {count}
         </button>
+        <div>
+          <p>後端數值：{value !== null ? value : '載入中...'}</p>
+        </div>
       </section>
 
       <div className="ticks"></div>
