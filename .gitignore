@@ -18,3 +18,11 @@
 *.json
 /back_end/obj/Debug/
 /back_end/obj/Debug/net8.0/rpswa.dswa.cache.json
+/back_end/obj/Debug/net8.0/ApiEndpoints.json
+/back_end/obj/Debug/net8.0/back_end.csproj.CoreCompileInputs.cache
+/back_end/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/back_end/obj/Debug/net8.0/staticwebassets.build.json
+/back_end/obj/Debug/net8.0/staticwebassets.build.json.cache
+/back_end/.vs/back_end/v17/DocumentLayout.backup.json
+/back_end/.vs/back_end/DesignTimeBuild/.dtbcache.v2
+/back_end/back_end.csproj.user
