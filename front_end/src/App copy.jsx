@@ -1,178 +1,154 @@
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
 import "./App.css";
-import {
-  Navigate,
-  useRoutes,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-import { useSelector } from "react-redux";
-import Login from "./Views/Login";
-import EipLoginHandler from "./Views/EipLoginHandler";
-import EipLoginError from "./Views/EipLoginError";
-import SsoLoginHandler from "./Views/SsoLoginHandler";
-import SsoLoginError from "./Views/SsoLoginError";
-import { handleRoutersData, handleRoutersData_netCore } from "./Menus";
-import Layout from "./Views/Shared/Layout";
-import { useRef, useState } from "react";
-import { useEffect } from "react";
-import IFAA340F from "./Views/IFAA/IFAA340F";
-import IFAC060F from "./Views/IFAC/IFAC060F";
-import IFAC080F from "./Views/IFAC/IFAC080F";
-import SYSNEWS020 from "./Views/SYS/SYSNEWS020";
-import IFAD6010F from "./Views/IFAD/IFAD6010F";
-import { BACKENDVERSION } from "./Common/Const";
-import { setStorageItem, getStorageItem } from "./Common/StorageService";
-import axios from "axios";
-import { BASEURL } from "/src/Common/Const.js";
 
 function App() {
-  const menuData = useSelector((x) => x.menu);
-  const [routers, setRouters] = useState([]);
-  const navigate = useNavigate();
-  const urlPathRef = useRef(useLocation().pathname);
-  const firstLogin = getStorageItem("key")?.First_Login;
-  let allRoutes = [
-    {
-      path: "/Login",
-      element: <Login />,
-    },
-    {
-      path: "/eip-login-handler",
-      element: <EipLoginHandler />,
-    },
-    {
-      path: "/eip-login-error",
-      element: <EipLoginError />,
-    },
-    {
-      path: "/sso-login-handler",
-      element: <SsoLoginHandler />,
-    },
-    {
-      path: "/sso-login-error",
-      element: <SsoLoginError />,
-    },
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        {
-          index: true,
-          element:
-            routers.length === 0 || firstLogin === "True" ? (
-              <></>
-            ) : (
-              <SYSNEWS020 />
-            ),
-        },
-        {
-          path: "/IFAA/IFAA340F",
-          element: <IFAA340F />,
-        },
-        {
-          path: "/SYS/SYSNEWS020",
-          element: <SYSNEWS020 />,
-        },
-        {
-          path: "/IFAC/IFAC060F",
-          element: <IFAC060F />,
-        },
-        {
-          path: "/IFAC/IFAC080F",
-          element: <IFAC080F />,
-        },
-      ].concat(
-        routers.map((x) => {
-          return x;
-        }),
-      ),
-    },
-    {
-      path: "*",
-      element: <Navigate replace to={"/"}></Navigate>,
-    },
-  ];
-  const [isInitializing, setIsInitializing] = useState(true);
-  // 應用系統配置
-  const applySystemConfig = (config) => {
-    // 更新網頁標題
-    document.title = config.title;
+  const [count, setCount] = useState(0);
+  const [value, setValue] = useState(null);
+  const [valueInput, setValueInput] = useState("");
 
-    // 更新 favicon
-    const favicon = document.querySelector("link[rel*='icon']");
-    favicon.href = BASEURL + `/Image/${config.file}/logo.ico`;
+  const sendNum = (v) => {
+    const num = Number(v);
+    if (Number.isNaN(num)) return;
+    fetch(`/api/account/value?num=${encodeURIComponent(num)}`)
+      .then((res) => res.json())
+      .then((data) => setValue(data.value))
+      .catch((err) => console.error(err));
   };
-  // 獲取系統配置
+
   useEffect(() => {
-    const fetchSystemConfig = async () => {
-      try {
-        // 先檢查 Storage 中是否已有系統配置
-        const cachedConfig = getStorageItem("systemConfig", true, null);
-
-        if (cachedConfig) {
-          // 使用已快取的配置
-          applySystemConfig(cachedConfig);
-        } else {
-          // 獲取新的系統配置
-          const response = await axios.get(
-            BASEURL + "/api/Auth/GetCmpIdentify",
-          );
-          if (response.data) {
-            const config = response.data;
-            // 應用系統配置
-            applySystemConfig(config[0]);
-            // 儲存到 Storage
-            setStorageItem(
-              "systemConfig",
-              config[0],
-              true, // 儲存為 JSON
-            );
-          }
-        }
-      } catch (error) {
-        console.error("獲取系統配置失敗:", error);
-      } finally {
-        setIsInitializing(false);
-      }
-    };
-
-    fetchSystemConfig();
+    // fetch("/api/account/value")
+    //   .then((res) => res.json())
+    //   .then((data) => setValue(data.value))
+    //   .catch((err) => console.error(err));
+    sendNum(12);
   }, []);
 
-  useEffect(() => {
-    BACKENDVERSION === "netCore"
-      ? setRouters(handleRoutersData_netCore(menuData.menu))
-      : setRouters(handleRoutersData(menuData.menu));
+  return (
+    <>
+      <section id="center">
+        <div className="hero">
+          <img src={heroImg} className="base" width="170" height="179" alt="" />
+          <img src={reactLogo} className="framework" alt="React logo" />
+          <img src={viteLogo} className="vite" alt="Vite logo" />
+        </div>
+        <div>
+          <h1>Get started</h1>
+          <p>
+            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+          </p>
+        </div>
+        <button
+          type="button"
+          className="counter"
+          onClick={() => setCount((count) => count + 1)}
+        >
+          Count is {count}
+        </button>
+        <div>
+          <p>後端數值：{value !== null ? value : '載入中...'}</p>
+          <div style={{ marginTop: '8px' }}>
+            <input
+              type="number"
+              value={valueInput}
+              onChange={(e) => setValueInput(e.target.value)}
+              placeholder="輸入數值"
+              style={{ width: '120px', marginRight: '8px' }}
+            />
+            <button type="button" onClick={() => sendNum(valueInput)}>送出給後端</button>
+          </div>
+        </div>
+      </section>
 
-    if (menuData.menu.length > 0) {
-      setTimeout(() => {
-        if (firstLogin === "True") {
-          navigate("/IFAA/IFAA340F");
-        } else {
-          navigate(urlPathRef.current);
-        }
-      }, 0);
-    }
-  }, [menuData]);
+      <div className="ticks"></div>
 
-  const routes = useRoutes(allRoutes);
-  // 如果仍在初始化，顯示加載指示器
-  if (isInitializing) {
-    return (
-      <div
-        className="loading-container"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100%",
-        }}
-      ></div>
-    );
-  }
+      <section id="next-steps">
+        <div id="docs">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#documentation-icon"></use>
+          </svg>
+          <h2>Documentation</h2>
+          <p>Your questions, answered</p>
+          <ul>
+            <li>
+              <a href="https://vite.dev/" target="_blank">
+                <img className="logo" src={viteLogo} alt="" />
+                Explore Vite
+              </a>
+            </li>
+            <li>
+              <a href="https://react.dev/" target="_blank">
+                <img className="button-icon" src={reactLogo} alt="" />
+                Learn more
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="social">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#social-icon"></use>
+          </svg>
+          <h2>Connect with us</h2>
+          <p>Join the Vite community</p>
+          <ul>
+            <li>
+              <a href="https://github.com/vitejs/vite" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#github-icon"></use>
+                </svg>
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a href="https://chat.vite.dev/" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#discord-icon"></use>
+                </svg>
+                Discord
+              </a>
+            </li>
+            <li>
+              <a href="https://x.com/vite_js" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#x-icon"></use>
+                </svg>
+                X.com
+              </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/vite.dev" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#bluesky-icon"></use>
+                </svg>
+                Bluesky
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-  return routes;
+      <div className="ticks"></div>
+      <section id="spacer"></section>
+    </>
+  );
 }
 
 export default App;
