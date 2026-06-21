@@ -48,7 +48,7 @@ function App() {
           Count is {count}
         </button>
         <div>
-          {/* <p>後端數值：{value !== null ? value : '載入中...'}</p>
+          <p>後端數值：{value !== null ? value : '載入中...'}</p>
           <div style={{ marginTop: '8px' }}>
             <input
               type="number"
@@ -58,7 +58,7 @@ function App() {
               style={{ width: '120px', marginRight: '8px' }}
             />
             <button type="button" onClick={() => sendNum(valueInput)}>送出給後端</button>
-          </div> */}
+          </div>
         </div>
       </section>
 
