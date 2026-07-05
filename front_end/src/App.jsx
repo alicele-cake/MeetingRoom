@@ -75,23 +75,23 @@ function App() {
 
         if (cachedConfig) {
           // 使用已快取的配置
-          applySystemConfig(cachedConfig);
+          // applySystemConfig(cachedConfig);
         } else {
           // 獲取新的系統配置
-          const response = await axios.get(
-            BASEURL + "/api/Auth/GetCmpIdentify",
-          );
-          if (response.data) {
-            const config = response.data;
-            // 應用系統配置
-            applySystemConfig(config[0]);
-            // 儲存到 Storage
-            // setStorageItem(
-            //   "systemConfig",
-            //   config[0],
-            //   true, // 儲存為 JSON
-            // );
-          }
+          // const response = await axios.get(
+          //   BASEURL + "/api/Auth/GetCmpIdentify",
+          // );
+          // if (response.data) {
+          //   // const config = response.data;
+          //   // 應用系統配置
+          //   // applySystemConfig(config[0]);
+          //   // 儲存到 Storage
+          //   // setStorageItem(
+          //   //   "systemConfig",
+          //   //   config[0],
+          //   //   true, // 儲存為 JSON
+          //   // );
+          // }
         }
       } catch (error) {
         console.error("獲取系統配置失敗:", error);
