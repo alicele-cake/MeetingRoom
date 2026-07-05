@@ -1,154 +1,130 @@
 import { useEffect, useState } from "react";
-import reactLogo from "../assets/react.svg";
-import viteLogo from "../assets/vite.svg";
-import heroImg from "../assets/hero.png";
-import "../App.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { BASEURL, BACKENDVERSION } from "/src/Common/Const.js";
+import { setStorageItem, getStorageItem } from "/src/Common/StorageService.js";
 
-function App() {
-  const [count, setCount] = useState(0);
-  const [value, setValue] = useState(null);
-  const [valueInput, setValueInput] = useState("");
+/**
+ * 帳密登入頁
+ */
+const Login = () => {
+  const [account, setAccount] = useState("");
+  const [pwd, setPwd] = useState("");
+  const navigate = useNavigate();
 
-  const sendNum = (v) => {
-    const num = Number(v);
-    if (Number.isNaN(num)) return;
-    fetch(`/api/account/value?num=${encodeURIComponent(num)}`)
-      .then((res) => res.json())
-      .then((data) => setValue(data.value))
-      .catch((err) => console.error(err));
-  };
-
+  // 已登入則直接導回首頁
   useEffect(() => {
-    // fetch("/api/account/value")
-    //   .then((res) => res.json())
-    //   .then((data) => setValue(data.value))
-    //   .catch((err) => console.error(err));
-    sendNum(12);
+    if (getStorageItem("key")) {
+      navigate("/");
+    }
   }, []);
 
+  const login = () => {
+    if (!account || !pwd) {
+      Swal.fire("請輸入帳號與密碼", "", "warning");
+      return;
+    }
+
+    const url =
+      BACKENDVERSION === "netCore"
+        ? BASEURL + "/api/Auth/Login"
+        : BASEURL + "/Token";
+    const postData =
+      BACKENDVERSION === "netCore"
+        ? { PNO: account, PWD: pwd, LoginType: "0", SSO: "0" }
+        : { PASS_NO: account, PASS_WD: pwd };
+
+    axios
+      .post(url, postData, {
+        headers: { authorization: "Basic a3NpOjA0MjI2MzM5Njg=" },
+      })
+      .then((response) => {
+        const { Result, ...rest } = response.data;
+        setStorageItem("key", { ...Result, ...rest });
+        navigate("/");
+      })
+      .catch((error) => {
+        Swal.fire("登入失敗", error?.response?.data?.message ?? "", "error");
+      });
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") login();
+  };
+
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        gap: "8px",
+        background: "#f3f4f6",
+      }}
+      onKeyDown={handleKeyDown}
+    >
+      <div
+        style={{
+          minWidth: "320px",
+          padding: "40px",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          background: "#fff",
+          boxShadow: "0 8px 22px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "18px",
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: "20px",
+          }}
+        >
+          會議室登記系統
+        </h1>
+
+        <div style={{ marginBottom: "12px" }}>
+          <label style={{ display: "block", marginBottom: "4px" }}>帳號</label>
+          <input
+            type="text"
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
+            style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+          />
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+
+        <div style={{ marginBottom: "20px" }}>
+          <label style={{ display: "block", marginBottom: "4px" }}>密碼</label>
+          <input
+            type="password"
+            value={pwd}
+            onChange={(e) => setPwd(e.target.value)}
+            style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
+          />
         </div>
+
         <button
           type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={login}
+          style={{
+            width: "100%",
+            padding: "10px",
+            color: "#fff",
+            background: "#1f6650",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+          }}
         >
-          Count is {count}
+          登入
         </button>
-        <div>
-          <p>後端數值：{value !== null ? value : '載入中...'}</p>
-          <div style={{ marginTop: '8px' }}>
-            <input
-              type="number"
-              value={valueInput}
-              onChange={(e) => setValueInput(e.target.value)}
-              placeholder="輸入數值"
-              style={{ width: '120px', marginRight: '8px' }}
-            />
-            <button type="button" onClick={() => sendNum(valueInput)}>送出給後端</button>
-          </div>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      </div>
+    </div>
   );
-}
+};
 
-export default App;
+export default Login;
