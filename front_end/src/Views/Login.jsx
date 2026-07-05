@@ -62,7 +62,7 @@ const Login = () => {
         alignItems: "center",
         height: "100vh",
         gap: "8px",
-        background: "#f3f4f6",
+        background: "#5e7ab1",
       }}
       onKeyDown={handleKeyDown}
     >
@@ -72,7 +72,7 @@ const Login = () => {
           padding: "40px",
           border: "1px solid #ccc",
           borderRadius: "10px",
-          background: "#fff",
+          background: "#8e5050",
           boxShadow: "0 8px 22px rgba(0,0,0,0.1)",
         }}
       >
