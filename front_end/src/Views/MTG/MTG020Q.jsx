@@ -8,11 +8,11 @@ import {
   deleteBooking,
   ROOM_OPTIONS,
   STATUS_OPTIONS,
-} from "/src/Common/mockMtg020q.js";
+} from "/src/Common/mtg020qApi.js";
 
 /**
  * MTG020Q 會議室查詢/維護
- * 具備 查詢 / 新增 / 修改 / 刪除，資料來源目前為假資料庫 (mockMtg020q.js)，可日後替換為後端 API。
+ * 具備 查詢 / 新增 / 修改 / 刪除，資料來源為後端 API (mtg020qApi.js → /api/apiMTG020Q，記憶體假資料版)。
  */
 
 // 查詢列的空白條件

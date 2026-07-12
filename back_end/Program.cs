@@ -13,6 +13,9 @@ builder.Services.AddControllers();
 // 登入 / JWT 服務（記憶體假資料版）
 builder.Services.AddSingleton<AuthService>();
 
+// 會議室預約資料服務（記憶體假資料版）
+builder.Services.AddSingleton<MtgBookingService>();
+
 // CORS：允許前端來源（可在 appsettings 的 Cors:AllowOrigins 設定）
 var allowOrigins = builder.Configuration
     .GetSection("Cors:AllowOrigins")
